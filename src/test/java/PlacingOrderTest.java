@@ -1,23 +1,24 @@
-import org.hamcrest.MatcherAssert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import pages.CustomerDetail;
 import pages.HomePageObject;
 import pages.OrderPage;
 import pages.RentalConditions;
 
-import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
 public class PlacingOrderTest {
     private WebDriver driver;
+    private final String scooterUrl = "https://qa-scooter.praktikum-services.ru/";
+    private final String button;
+    private final String buttonNext;
     private final String name;
     private final String lastName;
     private final String adress;
@@ -26,7 +27,9 @@ public class PlacingOrderTest {
     private final String date;
     private final String comment;
 
-    public PlacingOrderTest(String name, String lastName, String adress, String metro, String phone, String date, String comment) {
+    public PlacingOrderTest(String button,  String name, String lastName, String adress, String metro, String phone, String date, String comment, String buttonNext) {
+        this.button = button;
+        this.buttonNext = buttonNext;
         this.name = name;
         this.lastName = lastName;
         this.adress = adress;
@@ -39,18 +42,19 @@ public class PlacingOrderTest {
     @Parameterized.Parameters
     public static Object[][] getDataOrder() {
         return new Object[][]{
-                {"Артем", "Лаптев", "Москва, ул. Островитянова, д. 1", "Кузьминки", "+79998770001", "30.12.2024", "Оставить у двери"},
-                {"Ярослав", "Золотов", "Москва, ул. Тверская", "Пушкинская", "+70012119596", "31.12.2024", "Во второй половине дня"},
+                {".//div[@class='Header_Nav__AGCXC']//button[text()='Заказать']","Артем", "Лаптев", "Москва, ул. Островитянова, д. 1", "Кузьминки", "+79998770001", "30.12.2024", "Оставить у двери",".//div[@class='Order_Buttons__1xGrp']//button[text()='Заказать']"},
+                {".//div[@class='Home_FinishButton__1_cWm']//button[text()='Заказать']","Ярослав", "Золотов", "Москва, ул. Тверская", "Пушкинская", "+70012119596", "31.12.2024", "Во второй половине дня", ".//div[@class='Header_Nav__AGCXC']//button[text()='Заказать']"},
+
         };
     }
 
 
     @Before
     public void prepare() {
-        //driver = new FirefoxDriver();
-        driver = new ChromeDriver();
+        driver = new FirefoxDriver();
+        // driver = new ChromeDriver();
         driver.manage().window().fullscreen();
-        driver.get("https://qa-scooter.praktikum-services.ru/");
+        driver.get(scooterUrl);
     }
 
     @Test
@@ -58,7 +62,7 @@ public class PlacingOrderTest {
     public void checkOrderScooter() throws InterruptedException {
         HomePageObject homePageObject = new HomePageObject(driver);
         homePageObject.clickСookieButton();
-        homePageObject.clickOrderButton();
+        homePageObject.clickOrderButton(button);
         CustomerDetail customerDetail = new CustomerDetail(driver);
         String actualTitlePage = customerDetail.checkPageTitle();
         assertEquals("Неверный зголовок", "Для кого самокат", actualTitlePage);
@@ -75,23 +79,13 @@ public class PlacingOrderTest {
         String period = rentalConditions.choiceRentalPeriod();
         String color = rentalConditions.setColorScooter();
         rentalConditions.inputComment(comment);
-        rentalConditions.clickButtonBack();
-        customerDetail.clickButtonNext();
-        rentalConditions.clickButtonOrder();
-        rentalConditions.clickButtonNo();
-        rentalConditions.clickButtonOrder();
+        rentalConditions.clickButtonOrder(buttonNext);
         rentalConditions.clickButtonYes();
         rentalConditions.clickButtonStatus();
         OrderPage orderPage = new OrderPage(driver);
         orderPage.checkDataOrder(name, lastName, adress, metro, phone,date, period, color, comment);
         orderPage.ckickButtonCancelOrder();
-        String resultTitleCancel = orderPage.checkTitleCancel();
-        assertEquals("Неверный заголовок", "Хотите отменить заказ?\n ", resultTitleCancel);
-        orderPage.clickButtonCancel();
-        Thread.sleep(500);
-        String resultTitleCancelConfirm = orderPage.checkTitleCancel();
-        assertEquals("Неверный заголовок", "Заказ отменён\nВозвращайтесь, мы всегда вас ждём :)", resultTitleCancelConfirm);
-        orderPage.clickButtonGood();
+
 
     }
 

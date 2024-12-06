@@ -25,7 +25,6 @@ public class OrderPage {
     private final By buttonGood = By.xpath(".//button[text()='Хорошо']");
     //Заголовок всплывающего окна "Отмены заказа"
     private final By titleCancelOrger = By.className("Order_ModalHeader__3FDaJ");
-
     //Список элементов для проверки через массив
     private String[] nameDataList = {"Имя", "Фамилия", "Адрес", "Станция", "Номер телефона", "Дата доставки", "Комментарий"};
 

@@ -30,8 +30,6 @@ public class RentalConditions {
         private final By coomentСourier = By.xpath(".//input[@placeholder='Комментарий для курьера']");
         //Кнопка "Назад"
         private final By buttonBack = By.xpath(".//button[text()='Назад']");
-        //Кнопка "Заказать"
-        private final By buttonOrder = By.xpath(".//div//button[text()='Заказать']");
         //Кнопка "Нет"
         private final By buttonNo = By.xpath(".//button[text()='Нет']");
         //Кнопка "Да"
@@ -100,13 +98,10 @@ public class RentalConditions {
     }
 
         //Метод нажатия кнопки Заказать
-            public void clickButtonOrder() {
+            public void clickButtonOrder(String buttonOrder ) {
             new WebDriverWait(driver, Duration.ofSeconds(10))
-                    .until(ExpectedConditions.elementToBeClickable(buttonOrder));
-            List<WebElement> listButtonOrder = driver.findElements(buttonOrder);
-            Random random = new Random();
-            int randomIndex = random.nextInt(listButtonOrder.size());
-            listButtonOrder.get(randomIndex).click();
+                    .until(ExpectedConditions.elementToBeClickable(By.xpath (buttonOrder)));
+                driver.findElement(By.xpath(buttonOrder)).click();
     }
 
     //Метод нажатия кнопки "Нет"
