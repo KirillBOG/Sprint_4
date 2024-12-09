@@ -7,8 +7,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
-import java.util.List;
-import java.util.Random;
 
 
 // Класс домашней страницы
@@ -21,7 +19,14 @@ public class HomePageObject {
     private static final By COOKIE_BUTTON = By.className("App_CookieButton__3cvqF");
     // Заголовок раздела "Вопросы о важном"
     private static final By IMPORTANT_QUESTIONS = By.xpath(".//div[text()='Вопросы о важном']");
-
+    // Вопрос в списке
+    private final String questionIndex = "accordion__heading-%d";
+    // Ответы в спискке
+    private final String answerIndex = ".//div[@id='accordion__heading-%d']//p";
+    // Кнопка заказать Верхняя
+    public static final By buttonOrderUp = By.xpath(".//div[@class='Header_Nav__AGCXC']//button[text()='Заказать']");
+    // Кнопка заказать Нижняя
+    public static final By buttonOrderDown = By.xpath(".//div[@class='Home_FinishButton__1_cWm']//button[text()='Заказать']");
 
 
     public HomePageObject(WebDriver driver) {
@@ -33,6 +38,14 @@ public class HomePageObject {
         new WebDriverWait(driver, Duration.ofSeconds(10))
             .until(ExpectedConditions.elementToBeClickable(COOKIE_BUTTON));
         driver.findElement(COOKIE_BUTTON).click();
+    }
+    //
+    public void clickOrderButtonOn (String button) {
+        if (button.equals("header")) {
+            driver.findElement(buttonOrderUp).click();
+        } else if (button.equals("home")) {
+            driver.findElement(buttonOrderDown).click();
+        }
     }
 
     // Метод скролинга
@@ -46,28 +59,28 @@ public class HomePageObject {
     }
 
     // Метод получения текста вопросов
-    public String checkFAQQuestion(String questionAdd){
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.elementToBeClickable(By.id(questionAdd)));
-        return driver.findElement(By.id(questionAdd)).getText();
+    public String checkFAQQuestion(int number){
+        new WebDriverWait(driver, Duration.ofSeconds(6))
+                .until(ExpectedConditions.elementToBeClickable(By.id(String.format(questionIndex, number))));
+        return driver.findElement(By.id(String.format(questionIndex, number))).getText();
     }
 
 
 
     // Метод нажатия на зону вопроса
-    public void  clickAllQuestions(String questionAdd) {
+    public void  clickAllQuestions(int numberQuestion) {
         new WebDriverWait(driver, Duration.ofSeconds(6))
-                .until(ExpectedConditions.elementToBeClickable(By.id(questionAdd)));
-        driver.findElement(By.id(questionAdd)).click();
+                .until(ExpectedConditions.elementToBeClickable(By.id(String.format(questionIndex, numberQuestion))));
+        driver.findElement(By.id(String.format(questionIndex, numberQuestion))).click();
     }
 
 
 
     // Метод получения текста ответа
-    public String getAnswerQuestions (String answer) {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.elementToBeClickable(By.xpath(answer)));
-        return driver.findElement(By.xpath(answer)).getText();
+    public String getAnswerQuestions (int numberAnswer) {
+        new WebDriverWait(driver, Duration.ofSeconds(6))
+                .until(ExpectedConditions.elementToBeClickable(By.id(String.format(answerIndex,numberAnswer))));
+        return driver.findElement(By.xpath(String.format(answerIndex, numberAnswer))).getText();
     }
 
 

@@ -42,8 +42,8 @@ public class PlacingOrderTest {
     @Parameterized.Parameters
     public static Object[][] getDataOrder() {
         return new Object[][]{
-                {".//div[@class='Header_Nav__AGCXC']//button[text()='Заказать']","Артем", "Лаптев", "Москва, ул. Островитянова, д. 1", "Кузьминки", "+79998770001", "30.12.2024", "Оставить у двери",".//div[@class='Order_Buttons__1xGrp']//button[text()='Заказать']"},
-                {".//div[@class='Home_FinishButton__1_cWm']//button[text()='Заказать']","Ярослав", "Золотов", "Москва, ул. Тверская", "Пушкинская", "+70012119596", "31.12.2024", "Во второй половине дня", ".//div[@class='Header_Nav__AGCXC']//button[text()='Заказать']"},
+                {"header","Артем", "Лаптев", "Москва, ул. Островитянова, д. 1", "Кузьминки", "+79998770001", "30.12.2024", "Оставить у двери","down"},
+                {"home","Ярослав", "Золотов", "Москва, ул. Тверская", "Пушкинская", "+70012119596", "31.12.2024", "Во второй половине дня", "up"},
 
         };
     }
@@ -62,7 +62,7 @@ public class PlacingOrderTest {
     public void checkOrderScooter() throws InterruptedException {
         HomePageObject homePageObject = new HomePageObject(driver);
         homePageObject.clickСookieButton();
-        homePageObject.clickOrderButton(button);
+        homePageObject.clickOrderButtonOn(button);
         CustomerDetail customerDetail = new CustomerDetail(driver);
         String actualTitlePage = customerDetail.checkPageTitle();
         assertEquals("Неверный зголовок", "Для кого самокат", actualTitlePage);
@@ -79,7 +79,7 @@ public class PlacingOrderTest {
         String period = rentalConditions.choiceRentalPeriod();
         String color = rentalConditions.setColorScooter();
         rentalConditions.inputComment(comment);
-        rentalConditions.clickButtonOrder(buttonNext);
+        rentalConditions.clickOrderButtonNew(buttonNext);
         rentalConditions.clickButtonYes();
         rentalConditions.clickButtonStatus();
         OrderPage orderPage = new OrderPage(driver);

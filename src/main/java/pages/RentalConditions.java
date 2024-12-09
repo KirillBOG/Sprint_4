@@ -36,6 +36,10 @@ public class RentalConditions {
         private final By buttonYes = By.xpath(".//button[text()='Да']");
         //Кнопка "Посмотреть статус"
         private final By buttonStatus = By.xpath(".//button[text()='Посмотреть статус']");
+        //Кнопка Заказать нижняя
+        public static final By buttonOrderNextUp = By.xpath(".//div[@class='Order_Buttons__1xGrp']//button[text()='Заказать']");
+        //Кнопка Заказать верхяя
+        public static final By buttonOrderNextDown = By.xpath(".//div[@class='Header_Nav__AGCXC']//button[text()='Заказать']");
 
 
 
@@ -44,11 +48,21 @@ public class RentalConditions {
         this.driver = driver;
     }
 
+
+
     //Метод Проерки корректности заголовка страницы
     public String checkPageTitle() {
         new WebDriverWait(driver, Duration.ofSeconds(6))
                 .until(ExpectedConditions.visibilityOfElementLocated(pageTitle));
         return driver.findElement(pageTitle).getText();
+    }
+
+    public void clickOrderButtonNew (String buttonNext) {
+        if (buttonNext.equals("down")) {
+            driver.findElement(buttonOrderNextUp).click();
+        } else if (buttonNext.equals("up")) {
+            driver.findElement(buttonOrderNextDown).click();
+        }
     }
 
     //Метод выбора даты доставки
